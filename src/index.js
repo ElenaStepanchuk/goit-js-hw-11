@@ -1,45 +1,113 @@
 import './sass/main.scss';
 
-import axios from "axios";
 import Notiflix from 'notiflix';
-import SimpleLightbox from "simplelightbox";
-import debounce from 'lodash.debounce';
+import SimpleLightbox from 'simplelightbox';
+import { FetchToIP } from './js/fetch-photos';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import * as bootstrap from 'bootstrap';
+
 
 const form = document.querySelector('.search-form');
 const input = document.querySelector('input[type="text"]');
 const button = document.querySelector('button[type="submit"]');
+const gallery = document.querySelector('.gallery');
+const loadMoreButton = document.querySelector('.load-more'),
 
-let arrayFoundPhotos = [];
-const DEBOUNCE_DELAY = 3000;
+fetchToIP = new FetchToIP();
 
-console.log(form);
-console.log(input);
-console.log(button);
+form.addEventListener('submit', handleSubmitOnForm);
+loadMoreButton.addEventListener('click', handleLoadMore);
 
-form.addEventListener('submit', handleSubmitOnForm)
+function handleSubmitOnForm(event) {
+    event.preventDefault(event);
+    gallery.innerHTML = '';
+    fetchToIP.fetch = event.currentTarget.elements.searchQuery.value;
+    fetchToIP.resetPage();
 
-function handleSubmitOnForm(name) {
-    name.preventDefault();
-    return fetch(`https://pixabay.com/api/?key=24384103-764a450d164e25b7c6f60e4ce&q=${name}&image_type=photo&orientation=horizontal&safesearch=true`)
-       .then(response => {
-           if (!response.ok) {
-                    throw new Error();
-               }
-           return response.json()
-       })
+
+fetchToIP.getFetchPhotos()
+.then(response => {
+      Notiflix.Notify.success(`Hooray! We found ${response.totalHits} images.`);
+    checkAmountOfHits();
+      return response;
+})
+    .then(createGalleryItems)
+    .then(() => {
+      let gallery = new SimpleLightbox('.gallery a');
+      
+      return gallery;
+    })
+    form.reset();
+ 
 }
 
-input.addEventListener('input', debounce(handleInputPhotoName, DEBOUNCE_DELAY));
-button.addEventListener('click', handleClickOnButton);
 
-function handleInputPhotoName(event) {
-    event.preventDefault();
-    arrayFoundPhotos.push(input.value);
-    console.log(arrayFoundPhotos);
+function createGalleryItems({hits}) {
+    
+    const galleryCreate = hits.map(hit => { 
+            return `<a class="gallery__item" href="${hit.largeImageURL}">
+    <div class="photo-card">
+<img src="${hit.webformatURL}" alt="${hit.tags}" class="gallery-img"loading="lazy" />
+  <div class="info">
+    <p class="info-item">
+      <b class="info-description">Likes</b>
+     <span class="info-number">${hit.likes}</span>
+    </p>
+    <p class="info-item">
+      <b class="info-description">Views</b>
+    <span class="info-number">${hit.views}</span>
+    </p>
+    <p class="info-item">
+      <b class="info-description">Comments</b>
+    <span class="info-number">${hit.comments}</span>
+    </p>
+    <p class="info-item">
+      b class="info-description">Downloads</b>
+    <span class="info-number">${hit.downloads}</span>
+    </p>
+   </div>
+  </div>
+  </a>`
+    }).join('');
+    gallery.insertAdjacentHTML('beforeend', galleryCreate);
 }
+
+    
+   
+function handleLoadMore(response) {
+
+  fetchToIP.getFetchPhotos()
+    .then(response => {
+        checkAmountOfHits();
+      return response;
+    }).then(createGalleryItems)
+    .then(() => {
+      let gallery = new SimpleLightbox('.gallery a');
+   
+      return gallery;
+    }).then(() => {
+      const { height: cardHeight } = document
+      .querySelector('.gallery')
+      .firstElementChild.getBoundingClientRect();
+
+      window.scrollBy({
+        top: cardHeight * 2,
+        behavior: 'smooth',
+      });
+    });
   
-
-function handleClickOnButton(event) {
-    event.preventDefault();
-    console.log(arrayFoundPhotos);
 }
+
+
+function checkAmountOfHits() {
+  console.log(fetchToIP.totalHits/fetchToIP.hits.length)
+  
+     if ((response.totalHits/response.hits.length)<=1) {
+     loadMoreButton.classList.add('disabled');
+      }
+
+        loadMoreButton.classList.remove('disabled');
+  }
+
+
+
