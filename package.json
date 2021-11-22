@@ -29,6 +29,7 @@
     "axios": "^0.24.0",
     "bootstrap": "^5.1.3",
     "lodash.debounce": "^4.0.8",
+    "lozad": "^1.16.0",
     "notiflix": "^3.2.2",
     "simplelightbox": "^2.10.1"
   }
