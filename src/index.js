@@ -11,11 +11,13 @@ const form = document.querySelector('.search-form');
 // const input = document.querySelector('input[type="text"]');
 // const button = document.querySelector('button[type="submit"]');
 const gallery = document.querySelector('.gallery');
-// const loadMoreButton = document.querySelector('.load-more');
+const loadMoreButton = document.querySelector('.load-more');
 
 const fetchToIP = new FetchToIP();
 
 form.addEventListener('submit', handleSubmitOnForm);
+loadMoreButton.addEventListener('click', handleLoadMore)
+
   const lightbox = new SimpleLightbox('.gallery a', {
     captions: true,
     captionsData: 'alt',
@@ -29,7 +31,7 @@ form.addEventListener('submit', handleSubmitOnForm);
 let totalHits = 0;
 
 function handleSubmitOnForm(event) {
-  event.preventDefault(event);
+  event.preventDefault();
   fetchToIP.request = event.currentTarget.elements.searchQuery.value.trim();
   fetchToIP.resetPage();
 
@@ -57,11 +59,11 @@ function handleAddCreateGallery(hits) {
 }
 
 function createGalleryItems({hits}) {
-    
+    // loading="lazy"
  let photoArray = hits.map(hit => {
     return `<a class="gallery__item" href="${hit.largeImageURL}">
     <div class="photo-card">
-<img src="${hit.webformatURL}" alt="${hit.tags}" class="gallery-img lozad" loading="lazy" />
+<img src="${hit.webformatURL}" alt="${hit.tags}" class="gallery-img"/>
   <div class="info">
     <p class="info-item">
       <b class="info-description">Likes</b>
@@ -92,10 +94,18 @@ function createGalleryItems({hits}) {
   gallery.innerHTML = '';
 }
 
-const observer = lozad('.lozad', {
-    rootMargin: '10px 0px', // syntax similar to that of CSS Margin
-    threshold: 0.1, // ratio of element convergence
-    enableAutoReload: true // it will reload the new image when validating attributes changes
-});
-observer.observe();
+// const observer = lozad(); 
+// const observer = lozad('.lozad', {
+//     rootMargin: '10px 0px', // syntax similar to that of CSS Margin
+//     threshold: 0.1, // ratio of element convergence
+//     enableAutoReload: true // it will reload the new image when validating attributes changes
+// });
+// observer.observe();
 
+function handleLoadMore(event) {
+  // event.preventDefault();
+  fetchToIP.getFetchPhotos()
+    .then(hits => {
+      handleAddCreateGallery(hits);
+    });
+}
