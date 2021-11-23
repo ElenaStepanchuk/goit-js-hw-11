@@ -4,16 +4,26 @@ import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import FetchToIP from './js/fetch-photos';
-import * as bootstrap from 'bootstrap';
-import lozad from 'lozad';
+
 
 const form = document.querySelector('.search-form');
 // const input = document.querySelector('input[type="text"]');
-// const button = document.querySelector('button[type="submit"]');
+const button = document.querySelector('button[type="submit"]');
 const gallery = document.querySelector('.gallery');
 const loadMoreButton = document.querySelector('.load-more');
 
 const fetchToIP = new FetchToIP();
+
+loadMoreButton.setAttribute(`disabled`, true);
+loadMoreButton.classList.add(`is-hidden`);
+
+
+button.addEventListener('click', showLoadMoreButton)
+
+function showLoadMoreButton() {
+  loadMoreButton.removeAttribute(`disabled`);
+  loadMoreButton.classList.remove(`is-hidden`);
+}
 
 form.addEventListener('submit', handleSubmitOnForm);
 loadMoreButton.addEventListener('click', handleLoadMore)
@@ -36,6 +46,8 @@ function handleSubmitOnForm(event) {
   fetchToIP.resetPage();
 
   if (fetchToIP.request === '') {
+    loadMoreButton.classList.add(`is-hidden`);
+    loadMoreButton.setAttribute(`disabled`, true);
     return Notiflix.Notify.warning(`Oops! You need to enter some value`);
   }
 
@@ -50,6 +62,8 @@ function handleSubmitOnForm(event) {
 function handleAddCreateGallery(hits) {
   totalHits += hits.length;
   if (hits.length === 0) {
+    loadMoreButton.classList.add(`is-hidden`);
+    loadMoreButton.setAttribute(`disabled`, true);
     return Notiflix.Notify.failure(
       `Sorry, there are no images matching your search query. Please try again.`,
     );
@@ -59,11 +73,10 @@ function handleAddCreateGallery(hits) {
 }
 
 function createGalleryItems({hits}) {
-    // loading="lazy"
- let photoArray = hits.map(hit => {
+   let photoArray = hits.map(hit => {
     return `<a class="gallery__item" href="${hit.largeImageURL}">
-    <div class="photo-card">
-<img src="${hit.webformatURL}" alt="${hit.tags}" class="gallery-img"/>
+    <div class="photo-card" data-infinite-scroll>
+<img src="${hit.webformatURL}" alt="${hit.tags}" loading="lazy" class="gallery-img"/>
   <div class="info">
     <p class="info-item">
       <b class="info-description">Likes</b>
@@ -102,8 +115,7 @@ function createGalleryItems({hits}) {
 // });
 // observer.observe();
 
-function handleLoadMore(event) {
-  // event.preventDefault();
+function handleLoadMore() {
   fetchToIP.getFetchPhotos()
     .then(hits => {
       handleAddCreateGallery(hits);
