@@ -40,7 +40,11 @@ loadMoreButton.addEventListener('click', handleLoadMore)
 
 let totalHits = 0;
 
-function handleSubmitOnForm(event) {
+
+
+
+
+async function handleSubmitOnForm(event) {
   event.preventDefault();
   fetchToIP.request = event.currentTarget.elements.searchQuery.value.trim();
   fetchToIP.resetPage();
@@ -56,8 +60,41 @@ function handleSubmitOnForm(event) {
       handleClearPhotoConteiner();
       handleAddCreateGallery(hits);
    });
-   
+
 }
+
+// const handleSubmitOnForm = async (event) => {
+
+//   event.preventDefault();
+//   fetchToIP.request = event.currentTarget.elements.searchQuery.value.trim();
+//   fetchToIP.resetPage();
+
+//   try {
+//     const createGallery = await fetchToIP.getFetchPhotos()
+//       .then(hits => {
+//         handleClearPhotoConteiner();
+//         handleAddCreateGallery(hits);
+//         return createGallery;
+//       } 
+//     catch (error) {
+//       fetchToIP.request === ''
+//       loadMoreButton.classList.add(`is-hidden`);
+//       loadMoreButton.setAttribute(`disabled`, true);
+//       return Notiflix.Notify.warning(`Oops! You need to enter some value`);
+//     };
+//   }
+
+  
+ 
+
+  
+   
+
+
+
+
+
+
 
 function handleAddCreateGallery(hits) {
   totalHits += hits.length;
@@ -107,17 +144,19 @@ function createGalleryItems({hits}) {
   gallery.innerHTML = '';
 }
 
-// const observer = lozad(); 
-// const observer = lozad('.lozad', {
-//     rootMargin: '10px 0px', // syntax similar to that of CSS Margin
-//     threshold: 0.1, // ratio of element convergence
-//     enableAutoReload: true // it will reload the new image when validating attributes changes
-// });
-// observer.observe();
-
 function handleLoadMore() {
   fetchToIP.getFetchPhotos()
     .then(hits => {
       handleAddCreateGallery(hits);
-    });
+    }).then(() => scrollToDown()
+    )
+}
+
+function scrollToDown() {
+  const cardHeight = gallery.firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight.y * (-6),
+    behavior: 'smooth',
+  });
 }
