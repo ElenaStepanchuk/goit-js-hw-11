@@ -54,17 +54,18 @@ async function handleSubmitOnForm(event) {
     loadMoreButton.setAttribute(`disabled`, true);
     return Notiflix.Notify.warning(`Oops! You need to enter some value`);
   }
-
   try {
-      await fetchToIP.getFetchPhotos(hits => {
+  fetchToIP.getFetchPhotos()
+    .then(hits => {
       handleClearPhotoConteiner();
       handleAddCreateGallery(hits);
-    });
-  } catch(error) {
+   });
+} catch(error) {
 console.log(error)
   }
-    
+  
 }
+
 
 
 // function handleSubmitOnForm(event) {
