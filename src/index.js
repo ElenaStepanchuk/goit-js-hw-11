@@ -55,34 +55,36 @@ async function handleSubmitOnForm(event) {
     return Notiflix.Notify.warning(`Oops! You need to enter some value`);
   }
 
-  fetchToIP.getFetchPhotos()
-    .then(hits => {
+  try {
+      await fetchToIP.getFetchPhotos(hits => {
       handleClearPhotoConteiner();
       handleAddCreateGallery(hits);
-   });
-
+    });
+  } catch(error) {
+console.log(error)
+  }
+    
 }
 
-// const handleSubmitOnForm = async (event) => {
 
+// function handleSubmitOnForm(event) {
 //   event.preventDefault();
 //   fetchToIP.request = event.currentTarget.elements.searchQuery.value.trim();
 //   fetchToIP.resetPage();
 
-//   try {
-//     const createGallery = await fetchToIP.getFetchPhotos()
-//       .then(hits => {
-//         handleClearPhotoConteiner();
-//         handleAddCreateGallery(hits);
-//         return createGallery;
-//       } 
-//     catch (error) {
-//       fetchToIP.request === ''
-//       loadMoreButton.classList.add(`is-hidden`);
-//       loadMoreButton.setAttribute(`disabled`, true);
-//       return Notiflix.Notify.warning(`Oops! You need to enter some value`);
-//     };
+//   if (fetchToIP.request === '') {
+//     loadMoreButton.classList.add(`is-hidden`);
+//     loadMoreButton.setAttribute(`disabled`, true);
+//     return Notiflix.Notify.warning(`Oops! You need to enter some value`);
 //   }
+
+//   fetchToIP.getFetchPhotos()
+//     .then(hits => {
+//       handleClearPhotoConteiner();
+//       handleAddCreateGallery(hits);
+//    });
+// }
+
 
   
  
