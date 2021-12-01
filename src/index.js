@@ -87,19 +87,19 @@ function createGalleryItems({hits}) {
   <div class="info">
     <p class="info-item">
       <b class="info-description">Likes</b>
-     <span class="info-number">${hit.likes}</span>
+     <span class="info-number"><br />${hit.likes}</span>
     </p>
     <p class="info-item">
       <b class="info-description">Views</b>
-    <span class="info-number">${hit.views}</span>
+    <span class="info-number"><br />${hit.views}</span>
     </p>
     <p class="info-item">
       <b class="info-description">Comments</b>
-    <span class="info-number">${hit.comments}</span>
+    <span class="info-number"><br />${hit.comments}</span>
     </p>
     <p class="info-item">
       <b class="info-description">Downloads</b>
-    <span class="info-number">${hit.downloads}</span>
+    <span class="info-number"><br />${hit.downloads}</span>
     </p>
    </div>
   </div>
