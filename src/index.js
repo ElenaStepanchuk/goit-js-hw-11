@@ -66,39 +66,6 @@ console.log(error)
   
 }
 
-
-
-// function handleSubmitOnForm(event) {
-//   event.preventDefault();
-//   fetchToIP.request = event.currentTarget.elements.searchQuery.value.trim();
-//   fetchToIP.resetPage();
-
-//   if (fetchToIP.request === '') {
-//     loadMoreButton.classList.add(`is-hidden`);
-//     loadMoreButton.setAttribute(`disabled`, true);
-//     return Notiflix.Notify.warning(`Oops! You need to enter some value`);
-//   }
-
-//   fetchToIP.getFetchPhotos()
-//     .then(hits => {
-//       handleClearPhotoConteiner();
-//       handleAddCreateGallery(hits);
-//    });
-// }
-
-
-  
- 
-
-  
-   
-
-
-
-
-
-
-
 function handleAddCreateGallery(hits) {
   totalHits += hits.length;
   if (hits.length === 0) {
